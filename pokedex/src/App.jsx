@@ -1,35 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { Route, Routes } from 'react-router-dom'; 
+import './App.css'; 
+import Pokedex from './pages/Pokedex'; 
+import Pokemon from './pages/Pokemon'; 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes> 
+      {/* Route for the home page, which will display the Pokedex component */}
+      <Route path="/" element={<Pokedex />} />
+      
+      {/* Route for individual Pokémon pages. The ":pokemonId" part captures the Pokémon ID */}
+      <Route path="/:pokemonId" element={<Pokemon />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App; // Exporting the App component so it can be used elsewhere
