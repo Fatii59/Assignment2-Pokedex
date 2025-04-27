@@ -90,7 +90,17 @@ const Pokemon = () => {
           />
 
           {/* Pokémon Image */}
-          <img src={fullImageUrl} alt={name} style={{ width: "200px", height: "200px" }} />
+          <img 
+              src={fullImageUrl} 
+              alt={name} 
+              style={{ 
+                width: "100%", 
+                maxWidth: "300px", 
+                height: "auto", 
+                objectFit: "contain" 
+              }} 
+            />
+
 
           {/* Right (Next) Arrow */}
           <img 
