@@ -10,7 +10,6 @@ import {
   Toolbar,
   TextField,
   InputAdornment,
-  Button,
   Select,
   MenuItem,
 } from "@mui/material";
@@ -65,6 +64,11 @@ const Pokedex = () => {
           textAlign: "center",
           position: "relative",
           "&:hover": { boxShadow: 6 },
+          backgroundColor: "#fff",
+          borderRadius: "16px",
+          maxWidth: "250px",
+          width: "100%",
+          margin: "0 auto",
         }}
         onClick={() => navigate(`/${name}`)}
       >
@@ -87,7 +91,13 @@ const Pokedex = () => {
           component="img"
           image={sprite}
           alt={name}
-          sx={{ width: 130, height: 130, mx: "auto" }}
+          sx={{
+            width: "100%",
+            maxWidth: "130px",
+            height: "auto",
+            objectFit: "contain",
+            mx: "auto",
+          }}
         />
         <CardContent sx={{ paddingBottom: "0 !important" }}>
           <Typography variant="h6">{toFirstCharUppercase(name)}</Typography>
@@ -97,16 +107,17 @@ const Pokedex = () => {
   };
 
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar sx={{ justifyContent: "center", flexWrap: "wrap", gap: 2 }}>
+    <Box sx={{ backgroundColor: "#6AC0FF", minHeight: "100vh" }}>
+      {/* AppBar */}
+      <AppBar position="static" sx={{ backgroundColor: "#6AC0FF", boxShadow: "none" }}>
+        <Toolbar sx={{ justifyContent: "center", flexWrap: "wrap", gap: 2, py: 2 }}>
           <Box component="img" src={PokeBall} alt="Pokemon Logo" sx={{ height: 50, mr: 2 }} />
           <TextField
             variant="standard"
             onChange={handleSearchChange}
-            placeholder="Search Pokemon"
+            placeholder="Search Pokémon"
             sx={{
-              backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
+              backgroundColor: (theme) => alpha(theme.palette.common.white, 0.2),
               paddingX: 2,
               paddingY: 1,
               borderRadius: 2,
@@ -125,9 +136,10 @@ const Pokedex = () => {
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
             sx={{
-              backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
-              borderRadius: 1,
+              backgroundColor: (theme) => alpha(theme.palette.common.white, 0.2),
+              borderRadius: 2,
               minWidth: 150,
+              color: "#fff",
             }}
           >
             <MenuItem value="id-asc">Lav-Høj</MenuItem>
@@ -138,13 +150,16 @@ const Pokedex = () => {
         </Toolbar>
       </AppBar>
 
+      {/* Pokémon Grid */}
       {Object.keys(pokemonData).length ? (
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(4, 1fr)" },
+            gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(4, 1fr)", lg: "repeat(5, 1fr)" },
             gap: 2,
-            p: 4,
+            p: { xs: 2, sm: 4 },
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           {Object.values(pokemonData)
@@ -171,6 +186,7 @@ const Pokedex = () => {
         </Box>
       )}
 
+      {/* Pagination Arrows */}
       <Box
         sx={{
           display: "flex",
@@ -198,7 +214,7 @@ const Pokedex = () => {
           }}
         />
       </Box>
-    </>
+    </Box>
   );
 };
 

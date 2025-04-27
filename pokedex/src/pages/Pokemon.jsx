@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom"; 
+import axios from "axios"; 
 
 import BackIcon from "../assets/back-to-home.svg";
 import LeftArrow from "../assets/chevron_left.svg";
@@ -15,12 +15,12 @@ const Pokemon = () => {
   const [description, setDescription] = useState("");
 
   const cleanDescription = (descriptionText) => {
-    if (!descriptionText) return "";
-    let cleaned = descriptionText.replace(/[\n\f\r]/g, " ");
-    cleaned = cleaned.replace(/[^a-zA-Z0-9 .,?!'é-]/g, '');
-    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-    cleaned = cleaned.replace(/([.,!?])(?=\w)/g, '$1 ');
-    cleaned = cleaned.replace(/POK[eé]MON/gi, 'Pokémon');
+    if (!descriptionText) return ""; 
+    let cleaned = descriptionText.replace(/[\n\f\r]/g, " "); 
+    cleaned = cleaned.replace(/[^a-zA-Z0-9 .,?!'é-]/g, ''); 
+    cleaned = cleaned.replace(/\s+/g, ' ').trim(); 
+    cleaned = cleaned.replace(/([.,!?])(?=\w)/g, '$1 '); 
+    cleaned = cleaned.replace(/POK[eé]MON/gi, 'Pokémon'); 
     return cleaned;
   };
 
@@ -55,83 +55,50 @@ const Pokemon = () => {
     const fullImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
     return (
-      <div style={{
-        backgroundColor: "#6AC0FF",
-        minHeight: "100vh",
-        padding: "1rem",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}>
+      <div style={{ backgroundColor: "#6AC0FF", minHeight: "100vh", padding: "1rem", textAlign: "center" }}>
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", maxWidth: "500px", width: "100%" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <img src={BackIcon} alt="Back" style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
-          <h1 style={{ margin: 0, color: "#fff", fontSize: "1.8rem" }}>
+          <h1 style={{ margin: 0, color: "#fff" }}>
             {name.charAt(0).toUpperCase() + name.slice(1)}
             <span style={{ color: "#333" }}> #{id.toString().padStart(3, "0")}</span>
           </h1>
         </div>
 
-        {/* Pokémon Image Section */}
-        <div style={{
-          position: "relative",
-          marginTop: "2rem",
-          maxWidth: "400px",
-          width: "100%"
-        }}>
-          {/* Left Arrow */}
-          <img
-            src={LeftArrow}
-            alt="Previous"
-            style={{
-              position: "absolute",
-              left: "0",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
-              width: "30px",
-              height: "30px"
-            }}
+        {/* Pokémon Image + Arrows */}
+        <div style={{ position: "relative", marginTop: "2rem" }}>
+          <img 
+            src={LeftArrow} 
+            alt="Previous" 
+            style={{ position: "absolute", left: "5%", top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
             onClick={() => {
               if (id > 1) {
                 navigate(`/${id - 1}`);
               }
             }}
           />
-
-          {/* Pokémon Image */}
-          <img
-            src={fullImageUrl}
-            alt={name}
-            style={{
-              width: "100%",
-              maxWidth: "300px",
-              height: "auto",
-              objectFit: "contain"
-            }}
+          <img 
+            src={fullImageUrl} 
+            alt={name} 
+            style={{ 
+              width: "100%", 
+              maxWidth: "300px", 
+              height: "auto", 
+              objectFit: "contain",
+              margin: "0 auto" 
+            }} 
           />
-
-          {/* Right Arrow */}
-          <img
-            src={RightArrow}
-            alt="Next"
-            style={{
-              position: "absolute",
-              right: "0",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
-              width: "30px",
-              height: "30px"
-            }}
+          <img 
+            src={RightArrow} 
+            alt="Next" 
+            style={{ position: "absolute", right: "5%", top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
             onClick={() => {
               navigate(`/${id + 1}`);
             }}
           />
         </div>
 
-        {/* Pokémon Types */}
+        {/* Types */}
         <div style={{ marginTop: "1rem" }}>
           {types.map((typeInfo) => (
             <span
@@ -139,11 +106,10 @@ const Pokemon = () => {
               style={{
                 backgroundColor: "#fff",
                 color: "#333",
-                padding: "0.4rem 0.8rem",
+                padding: "0.5rem 1rem",
                 borderRadius: "999px",
-                margin: "0 0.3rem",
+                margin: "0 0.5rem",
                 fontWeight: "bold",
-                fontSize: "0.9rem",
                 textTransform: "capitalize"
               }}
             >
@@ -152,59 +118,55 @@ const Pokemon = () => {
           ))}
         </div>
 
-        {/* About Section */}
+        {/* About Card */}
         <div style={{
           backgroundColor: "#fff",
-          margin: "2rem 0",
-          padding: "1rem",
-          borderRadius: "16px",
+          margin: "2rem auto",
+          width: "90%",
           maxWidth: "500px",
-          width: "90%"
+          borderRadius: "16px",
+          padding: "1rem"
         }}>
           <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "1rem" }}>
             {/* Weight */}
             <div>
               <img src={WeightIcon} alt="Weight" style={{ width: "24px" }} />
-              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>{weight / 10} kg</p>
-              <p style={{ color: "#777", margin: "0", fontSize: "0.8rem" }}>Weight</p>
+              <p style={{ color: "#333", fontWeight: "bold", margin: "0.5rem 0" }}>{weight / 10} kg</p>
+              <p style={{ color: "#777", margin: "0" }}>Weight</p>
             </div>
             {/* Height */}
             <div>
               <img src={HeightIcon} alt="Height" style={{ width: "24px" }} />
-              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>{height / 10} m</p>
-              <p style={{ color: "#777", margin: "0", fontSize: "0.8rem" }}>Height</p>
+              <p style={{ color: "#333", fontWeight: "bold", margin: "0.5rem 0" }}>{height / 10} m</p>
+              <p style={{ color: "#777", margin: "0" }}>Height</p>
             </div>
-            {/* Ability */}
+            {/* Move */}
             <div>
-              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>Move</p>
-              <p style={{ color: "#555", margin: "0", fontSize: "0.9rem" }}>{abilities[0]?.ability?.name}</p>
+              <p style={{ fontWeight: "bold", margin: "0.5rem 0", color: "#333" }}>Move</p>
+              <p style={{ color: "#555", margin: "0" }}>{abilities[0]?.ability?.name}</p>
             </div>
           </div>
 
-          <p style={{ margin: "1rem", color: "#555", fontSize: "0.95rem" }}>
+          <p style={{ margin: "1rem", color: "#555" }}>
             {description}
           </p>
         </div>
 
-        {/* Base Stats Section */}
+        {/* Base Stats Card */}
         <div style={{
           backgroundColor: "#fff",
-          marginBottom: "2rem",
-          padding: "1rem",
-          borderRadius: "16px",
+          margin: "2rem auto",
+          width: "90%",
           maxWidth: "500px",
-          width: "90%"
+          borderRadius: "16px",
+          padding: "1rem"
         }}>
-          <h2 style={{ color: "#333", fontSize: "1.5rem" }}>Base Stats</h2>
+          <h2 style={{ color: "#333" }}>Base Stats</h2>
           {stats.map((stat) => (
             <div key={stat.stat.name} style={{ marginBottom: "0.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ textTransform: "uppercase", fontWeight: "bold", color: "#555", fontSize: "0.85rem" }}>
-                  {stat.stat.name}
-                </span>
-                <span style={{ fontWeight: "bold", color: "#333", fontSize: "0.95rem" }}>
-                  {stat.base_stat}
-                </span>
+                <span style={{ textTransform: "uppercase", fontWeight: "bold", color: "#555" }}>{stat.stat.name}</span>
+                <span style={{ fontWeight: "bold", color: "#333" }}>{stat.base_stat}</span>
               </div>
               <div style={{ background: "#eee", borderRadius: "8px", overflow: "hidden" }}>
                 <div
@@ -232,7 +194,7 @@ const Pokemon = () => {
         generatePokemonJSX(pokemon)
       ) : (
         <div style={{ textAlign: "center", marginTop: "2rem", color: "#333" }}>
-          <p>Pokémon not found</p>
+          <p>Pokemon not found</p>
         </div>
       )}
     </>
