@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // React Router hooks for navigation
-import axios from "axios"; // Axios to make HTTP requests
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-// Importing images/icons for UI components
 import BackIcon from "../assets/back-to-home.svg";
 import LeftArrow from "../assets/chevron_left.svg";
 import RightArrow from "../assets/chevron_right.svg";
@@ -10,110 +9,129 @@ import WeightIcon from "../assets/weight.svg";
 import HeightIcon from "../assets/height.svg";
 
 const Pokemon = () => {
-  const { pokemonId } = useParams(); // Extract the pokemonId from the URL params
-  const navigate = useNavigate(); // Hook to navigate between routes
-  const [pokemon, setPokemon] = useState(undefined); // State to hold pokemon data
-  const [description, setDescription] = useState(""); // State for the description of the pokemon
+  const { pokemonId } = useParams();
+  const navigate = useNavigate();
+  const [pokemon, setPokemon] = useState(undefined);
+  const [description, setDescription] = useState("");
 
-  // Function to clean up the description text by removing unnecessary characters and fixing formatting
   const cleanDescription = (descriptionText) => {
-    if (!descriptionText) return ""; 
-    
-    // Clean up new lines, special characters, extra spaces, and punctuation
-    let cleaned = descriptionText.replace(/[\n\f\r]/g, " "); 
-    cleaned = cleaned.replace(/[^a-zA-Z0-9 .,?!'é-]/g, ''); 
-    cleaned = cleaned.replace(/\s+/g, ' ').trim(); 
-    cleaned = cleaned.replace(/([.,!?])(?=\w)/g, '$1 '); 
-    cleaned = cleaned.replace(/POK[eé]MON/gi, 'Pokémon'); 
-    
+    if (!descriptionText) return "";
+    let cleaned = descriptionText.replace(/[\n\f\r]/g, " ");
+    cleaned = cleaned.replace(/[^a-zA-Z0-9 .,?!'é-]/g, '');
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    cleaned = cleaned.replace(/([.,!?])(?=\w)/g, '$1 ');
+    cleaned = cleaned.replace(/POK[eé]MON/gi, 'Pokémon');
     return cleaned;
   };
 
-  // useEffect hook runs when the component is mounted or when pokemonId changes
   useEffect(() => {
-    // Fetch Pokémon data from the PokeAPI
     axios
       .get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`)
       .then((response) => {
-        setPokemon(response.data); // Store the response data in the state
+        setPokemon(response.data);
       })
       .catch(() => {
-        setPokemon(false); // If there's an error, set the pokemon state to false
+        setPokemon(false);
       });
 
-    // Fetch Pokémon species data (for the description)
     axios
       .get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`)
       .then((response) => {
-        // Extract the English description from the response
         const englishDescription = response.data.flavor_text_entries.find(
           (entry) => entry.language.name === "en"
         );
         if (englishDescription) {
-          const cleanedDescription = cleanDescription(englishDescription.flavor_text); // Clean the description
-          setDescription(cleanedDescription); // Set the description state
+          const cleanedDescription = cleanDescription(englishDescription.flavor_text);
+          setDescription(cleanedDescription);
         }
       })
       .catch(() => {
-        setDescription("Description not available."); // In case of error, set default message
+        setDescription("Description not available.");
       });
-  }, [pokemonId]); // Dependency array, re-run effect when pokemonId changes
+  }, [pokemonId]);
 
-  // Function to generate JSX structure for displaying Pokemon details
   const generatePokemonJSX = (pokemon) => {
     const { name, id, height, weight, types, abilities, stats } = pokemon;
     const fullImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
     return (
-      <div style={{ backgroundColor: "#6AC0FF", minHeight: "100vh", padding: "1rem", textAlign: "center" }}>
-        {/* Header Section with Back Button and Pokémon Name */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div style={{
+        backgroundColor: "#6AC0FF",
+        minHeight: "100vh",
+        padding: "1rem",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", maxWidth: "500px", width: "100%" }}>
           <img src={BackIcon} alt="Back" style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
-          <h1 style={{ margin: 0, color: "#fff" }}>
-            {name.charAt(0).toUpperCase() + name.slice(1)} {/* Capitalize first letter */}
-            <span style={{ color: "#333" }}> #{id.toString().padStart(3, "0")}</span> {/* Format the Pokémon ID */}
+          <h1 style={{ margin: 0, color: "#fff", fontSize: "1.8rem" }}>
+            {name.charAt(0).toUpperCase() + name.slice(1)}
+            <span style={{ color: "#333" }}> #{id.toString().padStart(3, "0")}</span>
           </h1>
         </div>
 
-        {/* Pokémon Image Section with Navigation Arrows */}
-        <div style={{ position: "relative", marginTop: "2rem" }}>
-          {/* Left (Previous) Arrow */}
-          <img 
-            src={LeftArrow} 
-            alt="Previous" 
-            style={{ position: "absolute", left: "5%", top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
+        {/* Pokémon Image Section */}
+        <div style={{
+          position: "relative",
+          marginTop: "2rem",
+          maxWidth: "400px",
+          width: "100%"
+        }}>
+          {/* Left Arrow */}
+          <img
+            src={LeftArrow}
+            alt="Previous"
+            style={{
+              position: "absolute",
+              left: "0",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+              width: "30px",
+              height: "30px"
+            }}
             onClick={() => {
               if (id > 1) {
-                navigate(`/${id - 1}`); // Navigate to previous Pokémon
+                navigate(`/${id - 1}`);
               }
             }}
           />
 
           {/* Pokémon Image */}
-          <img 
-              src={fullImageUrl} 
-              alt={name} 
-              style={{ 
-                width: "100%", 
-                maxWidth: "300px", 
-                height: "auto", 
-                objectFit: "contain" 
-              }} 
-            />
+          <img
+            src={fullImageUrl}
+            alt={name}
+            style={{
+              width: "100%",
+              maxWidth: "300px",
+              height: "auto",
+              objectFit: "contain"
+            }}
+          />
 
-
-          {/* Right (Next) Arrow */}
-          <img 
-            src={RightArrow} 
-            alt="Next" 
-            style={{ position: "absolute", right: "5%", top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
+          {/* Right Arrow */}
+          <img
+            src={RightArrow}
+            alt="Next"
+            style={{
+              position: "absolute",
+              right: "0",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+              width: "30px",
+              height: "30px"
+            }}
             onClick={() => {
-              navigate(`/${id + 1}`); // Navigate to next Pokémon
+              navigate(`/${id + 1}`);
             }}
           />
         </div>
 
-        {/* Pokémon Type Section */}
+        {/* Pokémon Types */}
         <div style={{ marginTop: "1rem" }}>
           {types.map((typeInfo) => (
             <span
@@ -121,65 +139,72 @@ const Pokemon = () => {
               style={{
                 backgroundColor: "#fff",
                 color: "#333",
-                padding: "0.5rem 1rem",
+                padding: "0.4rem 0.8rem",
                 borderRadius: "999px",
-                margin: "0 0.5rem",
+                margin: "0 0.3rem",
                 fontWeight: "bold",
+                fontSize: "0.9rem",
                 textTransform: "capitalize"
               }}
             >
-              {typeInfo.type.name} {/* Display each Pokémon type */}
+              {typeInfo.type.name}
             </span>
           ))}
         </div>
 
-        {/* About Section (Weight, Height, Abilities) */}
+        {/* About Section */}
         <div style={{
           backgroundColor: "#fff",
-          margin: "2rem auto",
-          width: "90%",
+          margin: "2rem 0",
+          padding: "1rem",
           borderRadius: "16px",
-          padding: "1rem"
+          maxWidth: "500px",
+          width: "90%"
         }}>
           <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "1rem" }}>
             {/* Weight */}
             <div>
               <img src={WeightIcon} alt="Weight" style={{ width: "24px" }} />
-              <p style={{ color: "#333", fontWeight: "bold", margin: "0.5rem 0" }}>{weight / 10} kg</p>
-              <p style={{ color: "#777", margin: "0" }}>Weight</p>
+              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>{weight / 10} kg</p>
+              <p style={{ color: "#777", margin: "0", fontSize: "0.8rem" }}>Weight</p>
             </div>
             {/* Height */}
             <div>
               <img src={HeightIcon} alt="Height" style={{ width: "24px" }} />
-              <p style={{ color: "#333", fontWeight: "bold", margin: "0.5rem 0" }}>{height / 10} m</p>
-              <p style={{ color: "#777", margin: "0" }}>Height</p>
+              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>{height / 10} m</p>
+              <p style={{ color: "#777", margin: "0", fontSize: "0.8rem" }}>Height</p>
             </div>
             {/* Ability */}
             <div>
-              <p style={{ fontWeight: "bold", margin: "0.5rem 0", color: "#333" }}>Move</p>
-              <p style={{ color: "#555", margin: "0" }}>{abilities[0]?.ability?.name}</p>
+              <p style={{ fontWeight: "bold", margin: "0.5rem 0", fontSize: "1rem" }}>Move</p>
+              <p style={{ color: "#555", margin: "0", fontSize: "0.9rem" }}>{abilities[0]?.ability?.name}</p>
             </div>
           </div>
 
-          <p style={{ margin: "1rem", color: "#555" }}>
-            {description} {/* Display the cleaned description */}
+          <p style={{ margin: "1rem", color: "#555", fontSize: "0.95rem" }}>
+            {description}
           </p>
         </div>
 
         {/* Base Stats Section */}
         <div style={{
           backgroundColor: "#fff",
-          margin: "2rem auto",
-          width: "90%",
+          marginBottom: "2rem",
+          padding: "1rem",
           borderRadius: "16px",
-          padding: "1rem"
+          maxWidth: "500px",
+          width: "90%"
         }}>
-          <h2 style={{ color: "#333" }}>Base Stats</h2>
+          <h2 style={{ color: "#333", fontSize: "1.5rem" }}>Base Stats</h2>
           {stats.map((stat) => (
             <div key={stat.stat.name} style={{ marginBottom: "0.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ textTransform: "uppercase", fontWeight: "bold", color: "#555" }}>{stat.stat.name}</span>
-                <span style={{ fontWeight: "bold", color: "#333" }}>{stat.base_stat}</span>
+                <span style={{ textTransform: "uppercase", fontWeight: "bold", color: "#555", fontSize: "0.85rem" }}>
+                  {stat.stat.name}
+                </span>
+                <span style={{ fontWeight: "bold", color: "#333", fontSize: "0.95rem" }}>
+                  {stat.base_stat}
+                </span>
               </div>
               <div style={{ background: "#eee", borderRadius: "8px", overflow: "hidden" }}>
                 <div
@@ -199,16 +224,15 @@ const Pokemon = () => {
 
   return (
     <>
-      {/* Display loading message or Pokémon details */}
       {pokemon === undefined ? (
         <div style={{ textAlign: "center", marginTop: "2rem", color: "#333" }}>
           <p>Loading...</p>
         </div>
       ) : pokemon ? (
-        generatePokemonJSX(pokemon) // If Pokémon data exists, generate JSX
+        generatePokemonJSX(pokemon)
       ) : (
         <div style={{ textAlign: "center", marginTop: "2rem", color: "#333" }}>
-          <p>Pokemon not found</p> {/* Display if Pokémon data is not found */}
+          <p>Pokémon not found</p>
         </div>
       )}
     </>
